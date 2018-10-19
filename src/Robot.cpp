@@ -15,8 +15,23 @@
 
 
 class Robot: public frc::IterativeRobot {
-private:
-	//Auto Names
+public:
+	double lDrive=0,rDrive=0;
+	Spark *fRight =new Spark(2);
+	Spark *bRight =new Spark(3);
+	Spark *climber =new Spark(4);
+	Spark *fLeft =new Spark(6);
+	Spark *bLeft =new Spark(7);
+	
+	Joystick *leftStick =new Joystick(0);
+	Joystick *rightStick =new Joystick(1);
+	Joystick *gamePad =new Joystick(2);
+
+
+
+	frc::RobotDrive *robotDrive =new frc::RobotDrive (fLeft,bLeft,fRight,bRight);
+
+	
 	
 	void RobotInit() {
 		//Auto Chooser
