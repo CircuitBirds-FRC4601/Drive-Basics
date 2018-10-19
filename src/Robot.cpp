@@ -12,108 +12,12 @@
 #include <CameraServer.h>
 #include <unistd.h>
 #include <IterativeRobot.h>
-#include <opencv2/core/core.hpp>
-#include <Encoder.h>
+
 
 class Robot: public frc::IterativeRobot {
 private:
 	//Auto Names
-	frc::SendableChooser<std::string> chooser;
-	const std::string autoForward = "FORWARD!";
-	const std::string autoForwardBox = "Forward Box (Left)";//Goes forward and drops box if FMS says it can
-	const std::string autoNone = "NONE";
-	std::string autoSelected;
-	//Auto Names
-
-	static void VisionThread() {
-		// Get the USB camera from CameraServer
-		cs::UsbCamera camera =
-				CameraServer::GetInstance()->StartAutomaticCapture();
-		//This is the simplest solution if you just need a basic camera just use this in robot int
-
-		// Set the resolution
-		camera.SetResolution(640, 480);
-		camera.SetBrightness(1200);
-		camera.SetExposureManual(42);
-
-
-		// Get a CvSink. This will capture Mats from the Camera
-		cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo();
-		// Setup a CvSource. This will send images back to the Dashboard
-
-		//sets up a output camera channle
-		cs::CvSource outputStream =
-				CameraServer::GetInstance()->PutVideo("Rectangle", 640, 480);
-
-		// Mats are very memory expensive. Lets reuse this Mat.
-		cv::Mat mat;
-
-		while (true) {
-			// Tell the CvSink to grab a frame from the camera and
-			// put it
-			// in the source mat.  If there is an error notify the
-			// output.
-			if (cvSink.GrabFrame(mat) == 0) {
-				// Send the output the error.
-				outputStream.NotifyError(cvSink.GetError());
-				// skip the rest of the current iteration
-				continue;
-			}
-			// Do some stuff to image
-			//example
-			//cv::Split(mat,split_output_image); splits the image into each color chanel
-
-			outputStream.PutFrame(mat);//puts the image into the output stream
-		}
-	}
-
-
-public:
-	float lDrive=0,rDrive=0;
-	float elevation,angle;
-	int lDis=0,rDis=0;
-	bool armout,armin;
-	bool climby,shotIn,shotOut;
-	bool dumm,tiltdum=0,tilter;
-
-
-	int encRes=56;//Encoder Resolution Ticks per inch
-	bool leg0,leg1,leg2,leg3,leg4;
-
-
-	Spark *shooter =new Spark(0);
-	Spark *angler =new Spark(1);
-	Spark *fRight =new Spark(2);
-	Spark *bRight =new Spark(3);
-	Spark *climber =new Spark(4);
-	Spark *elevator =new Spark(5);
-	Spark *fLeft =new Spark(6);
-	Spark *bLeft =new Spark(7);
-
-
-	frc::Encoder *encLeft  =new Encoder(0,1);
-	frc::Encoder *encRight =new Encoder(2,3);
-
-	//Relay *realy = new Relay(0,Relay::Direction::kForwardOnly);
-
-
-	//Pnumatics
-	frc::Compressor *garry= new Compressor(0);
-	frc::DoubleSolenoid *arm =new DoubleSolenoid(0,1);
-	frc::DoubleSolenoid *tilt =new DoubleSolenoid(2,3);
-	//Pnumatics
-
-
-	Joystick *leftStick =new Joystick(0);
-	Joystick *rightStick =new Joystick(1);
-	Joystick *gamePad =new Joystick(2);
-
-
-
-	std::string gameData;//its a 3 letter String Depicting Sides for auto
-
-	frc::RobotDrive *robotDrive =new frc::RobotDrive (fLeft,bLeft,fRight,bRight);
-
+	
 	void RobotInit() {
 		//Auto Chooser
 		chooser.AddDefault(autoForward,autoForward);
